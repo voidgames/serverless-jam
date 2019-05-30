@@ -12,10 +12,10 @@ module.exports.hello = (event, context) => {
     // テーブル名
     "TableName": "sls_person",
     // 条件式（カラム名＝:変数）
-    "KeyConditionExpression":"person_id = :personId",
+    "KeyConditionExpression":"person_id = :person_id",
     // 変数の値にインプットパラメータを代入
     "ExpressionAttributeValues": {
-      ":personId" : {"S": event.personId}
+      ":person_id" : {"S": event.person_id}
     }
   };
 

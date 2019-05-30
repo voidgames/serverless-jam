@@ -45,6 +45,14 @@ provider:
 functions:
   hello:
     handler: handler.hello
+        events:
+      - http:
+          path: /
+          method: get
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "person_id" : "$input.params("person_id")" }'
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

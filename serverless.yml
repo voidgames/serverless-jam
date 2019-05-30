@@ -45,7 +45,7 @@ provider:
 functions:
   hello:
     handler: handler.hello
-        events:
+    events:
       - http:
           path: /
           method: get

@@ -1,0 +1,47 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:7.10
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      # install Serverless Framework
+      - run:
+          name: install-serverless
+          command: sudo npm install -g serverless@1.23.0
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      # - run:
+      #     name: Run unit test
+      #     command: npm run test
+      # - run:
+      #     name: Check coding standard by ESLint
+      #     command: npm run lint
+
+      - deploy:
+          name: Deploy by Serverless Framework
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              sls config credentials -k ${AWS_ACCESS_KEY} -s ${AWS_SECRET_KEY} -p aws
+              sls deploy
+            else
+              echo "Not master branch so not deploying"
+            fi
